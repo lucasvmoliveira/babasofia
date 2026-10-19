@@ -1,3 +1,7 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Babá da Sofia</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -102,7 +106,12 @@
   .done-msg:not([hidden]){animation:pop .4s ease;}
 
   canvas#confetti{position:fixed; inset:0; pointer-events:none; z-index:10;}
-  @media(max-width:420px){ .contract{padding:24px 18px 22px;} .btn{padding:13px 34px;} .terms{grid-template-columns:1fr;} }
+  @media(max-width:420px){
+    body{padding-block:16px;}
+    .avatar{width:128px; height:128px; border-width:4px; margin-bottom:10px;}
+    .contract{padding:24px 18px 22px;} .btn{padding:13px 34px;}
+    .stamp{font-size:15px; right:8px; top:64px; border-width:3px;} .terms{grid-template-columns:1fr;}
+  }
   @media(prefers-reduced-motion:reduce){ *{animation:none !important; transition:none !important;} }
 </style>
 
