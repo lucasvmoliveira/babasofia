@@ -1,0 +1,214 @@
+<title>Babá da Sofia</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Layout: uma tela por vez, centralizada. Pergunta colorida que vira um contrato de papel. */
+  :root{
+    --bg:#FFF3E0; --pink:#FF5C8A; --pink-dark:#D93A68; --yellow:#FFC93C;
+    --teal:#2EC4B6; --teal-dark:#0F8F84; --ink:#3B2A3F; --paper:#FFFDF7; --muted:#6F5B76;
+    --blob-pink:#FFD6E4; --blob-teal:#CFF3EE; --blob-yellow:#FFE8A8;
+    --term-bg:#FFF0F5; --term-border:#FFD0DE; --card:#FFFFFF;
+    --font-display:'Baloo 2', 'Trebuchet MS', sans-serif;
+    --font-body:'Lora', Georgia, serif;
+    color-scheme:light;
+  }
+  html{height:100%;}
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100%; display:flex;
+    font-family:var(--font-display); color:var(--ink);
+    padding-block:24px;
+    padding-left:max(16px, env(safe-area-inset-left, 0px));
+    padding-right:max(16px, env(safe-area-inset-right, 0px));
+    background:
+      radial-gradient(circle at 12% 18%, var(--blob-pink) 0 90px, transparent 91px),
+      radial-gradient(circle at 88% 82%, var(--blob-teal) 0 120px, transparent 121px),
+      radial-gradient(circle at 85% 12%, var(--blob-yellow) 0 60px, transparent 61px),
+      var(--bg);
+    overflow-x:hidden;
+  }
+  .screen{display:none; width:100%; max-width:520px; margin:auto; text-align:center; min-width:0;}
+  .screen.active{display:block; animation:pop .35s ease;}
+  @keyframes pop{from{opacity:0; transform:scale(.94) translateY(10px);} to{opacity:1; transform:none;}}
+
+  /* PERGUNTA */
+  .emoji-big{font-size:72px; margin-bottom:8px; display:inline-block; animation:bob 2.2s ease-in-out infinite;}
+  @keyframes bob{50%{transform:translateY(-8px) rotate(-4deg);}}
+  .tag{
+    display:inline-block; background:var(--yellow); color:var(--ink); font-weight:700;
+    font-size:13px; letter-spacing:.08em; text-transform:uppercase; padding:4px 14px; border-radius:99px; margin-bottom:14px;
+  }
+  h1{font-size:clamp(30px,8vw,44px); font-weight:800; line-height:1.15; margin:0 0 26px; text-wrap:balance;}
+  h1 span{color:var(--pink-dark);}
+  .answers{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; min-height:64px;}
+  .btn{
+    font-family:var(--font-display); font-weight:800; font-size:22px; border:none; cursor:pointer;
+    padding:14px 42px; border-radius:18px; color:#fff; transition:transform .12s ease, box-shadow .12s ease;
+    box-shadow:0 6px 0 rgba(0,0,0,.18);
+  }
+  .btn:active{transform:translateY(4px); box-shadow:0 2px 0 rgba(0,0,0,.18);}
+  .btn-yes{background:var(--teal-dark);}
+  .btn-no{background:var(--pink-dark);}
+  .btn:focus-visible{outline:3px solid var(--ink); outline-offset:3px;}
+  .invalid{
+    margin-top:22px; background:var(--card); border:3px dashed var(--pink-dark); color:var(--pink-dark);
+    border-radius:16px; padding:12px 16px; font-weight:700; font-size:18px;
+  }
+  .invalid.show{animation:shake .45s ease;}
+  @keyframes shake{20%{transform:translateX(-10px);}40%{transform:translateX(9px);}60%{transform:translateX(-6px);}80%{transform:translateX(4px);}}
+  .btn-yes.pulse{animation:pulse .8s ease 3;}
+  @keyframes pulse{50%{transform:scale(1.12);}}
+
+  /* CONTRATO */
+  .contract{
+    background:var(--paper); color:var(--ink); border-radius:6px; padding:30px 26px 26px; text-align:left;
+    font-family:var(--font-body); box-shadow:0 14px 40px rgba(59,42,63,.22); position:relative;
+    border-top:8px solid var(--pink);
+  }
+  .contract h2{
+    font-family:var(--font-display); text-align:center; font-size:23px; font-weight:800;
+    letter-spacing:.04em; margin:0 0 4px;
+  }
+  .contract .sub{text-align:center; color:var(--muted); font-size:13px; margin-bottom:18px;}
+  .contract p{font-size:15.5px; line-height:1.55; margin:0 0 10px;}
+  .contract strong{font-weight:700;}
+  .clause{font-family:var(--font-display); font-weight:700; color:var(--pink-dark); margin-top:14px; font-size:15px;}
+  .terms{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0 6px;}
+  .term{background:var(--term-bg); border:2px solid var(--term-border); border-radius:12px; padding:10px 12px; text-align:center; min-width:0;}
+  .term small{display:block; font-family:var(--font-display); font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted);}
+  .term b{font-family:var(--font-display); font-size:21px; color:var(--ink);}
+  .term.full{grid-column:1 / -1;}
+  .sign-area{margin-top:22px; display:flex; gap:18px; align-items:flex-end;}
+  .sign-box{flex:1; text-align:center; font-size:12.5px; color:var(--muted); min-width:0;}
+  .sign-line{border-bottom:2px solid var(--ink); height:44px; display:flex; align-items:flex-end; justify-content:center; margin-bottom:4px;}
+  .signature{
+    font-family:var(--font-display); font-weight:800; font-size:26px; color:var(--teal-dark);
+    transform:rotate(-4deg); opacity:0; transition:opacity .5s ease;
+  }
+  .signature.on{opacity:1;}
+  .sign-btn{margin-top:20px; width:100%;}
+  .stamp{
+    position:absolute; right:14px; top:58px; transform:rotate(14deg) scale(1.6);
+    border:4px solid var(--teal-dark); color:var(--teal-dark); font-family:var(--font-display); font-weight:800;
+    font-size:20px; padding:2px 12px; border-radius:10px; opacity:0; letter-spacing:.06em;
+    transition:all .35s cubic-bezier(.3,1.6,.5,1); pointer-events:none;
+  }
+  .stamp.on{opacity:.9; transform:rotate(14deg) scale(1);}
+  .done-msg{margin-top:16px; font-weight:800; font-size:20px; color:var(--teal-dark); text-align:center;}
+  .done-msg:not([hidden]){animation:pop .4s ease;}
+
+  canvas#confetti{position:fixed; inset:0; pointer-events:none; z-index:10;}
+  @media(max-width:420px){ .contract{padding:24px 18px 22px;} .btn{padding:13px 34px;} .terms{grid-template-columns:1fr;} }
+  @media(prefers-reduced-motion:reduce){ *{animation:none !important; transition:none !important;} }
+</style>
+
+<canvas id="confetti"></canvas>
+
+<!-- TELA 1: PERGUNTA -->
+<section class="screen active" id="screen-question">
+  <div class="emoji-big">👶</div><br>
+  <div class="tag">Pergunta importante</div>
+  <h1>Cunha, você quer ser <span>babá da Sofia?</span></h1>
+  <div class="answers">
+    <button class="btn btn-yes" id="btn-yes">Sim</button>
+    <button class="btn btn-no" id="btn-no">Não</button>
+  </div>
+  <div class="invalid" id="invalid" hidden>❌ Resposta inválida! Clique no <b>SIM</b>.</div>
+</section>
+
+<!-- TELA 2: CONTRATO -->
+<section class="screen" id="screen-contract">
+  <div class="contract">
+    <div class="stamp" id="stamp">CONTRATADA!</div>
+    <h2>📜 CONTRATO DE BABÁ</h2>
+    <div class="sub">Documento oficial (e muito sério) da Sofia</div>
+
+    <p>Pelo presente contrato, <strong>Cunha</strong>, doravante chamado(a) <strong>BABÁ</strong>, aceita cuidar com carinho, atenção e muita paciência da pequena <strong>Sofia</strong>.</p>
+
+    <div class="terms">
+      <div class="term"><small>Salário</small><b>R$ 450 / mês</b></div>
+      <div class="term"><small>Dias de trabalho</small><b>Terça a Sábado</b></div>
+      <div class="term full"><small>Função</small><b>Babá da Sofia 👑</b></div>
+    </div>
+
+    <div class="clause">Cláusula 1 — Do trabalho</div>
+    <p>A BABÁ trabalhará de <strong>terça-feira a sábado</strong>, cuidando da Sofia durante o período combinado com a família.</p>
+
+    <div class="clause">Cláusula 2 — Do pagamento</div>
+    <p>A BABÁ receberá o salário de <strong>R$ 450,00 (quatrocentos e cinquenta reais) por mês</strong>.</p>
+
+    <div class="clause">Cláusula 3 — Dos deveres</div>
+    <p>Brincar, vigiar, dar atenção e garantir que a Sofia esteja sempre segura, alimentada e feliz.</p>
+
+    <div class="sign-area">
+      <div class="sign-box">
+        <div class="sign-line"><span class="signature" id="signature">Cunha</span></div>
+        Cunha (Babá)
+      </div>
+      <div class="sign-box">
+        <div class="sign-line"></div>
+        Responsável pela Sofia
+      </div>
+    </div>
+
+    <button class="btn btn-yes sign-btn" id="btn-sign">✍️ Assinar contrato</button>
+    <div class="done-msg" id="done-msg" hidden>🎉 Contrato assinado! Bem-vindo(a) à equipe da Sofia!</div>
+  </div>
+</section>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const screens = { q:$('screen-question'), c:$('screen-contract') };
+  const invalid = $('invalid');
+  const yes = $('btn-yes');
+
+  function show(name){
+    Object.values(screens).forEach(s=>s.classList.remove('active'));
+    screens[name].classList.add('active');
+    window.scrollTo(0,0);
+  }
+
+  $('btn-no').addEventListener('click', ()=>{
+    invalid.hidden = false;
+    invalid.classList.remove('show');
+    void invalid.offsetWidth; // reinicia a animação
+    invalid.classList.add('show');
+    yes.classList.remove('pulse'); void yes.offsetWidth; yes.classList.add('pulse');
+  });
+
+  yes.addEventListener('click', ()=>{ show('c'); });
+
+  $('btn-sign').addEventListener('click', ()=>{
+    $('signature').classList.add('on');
+    $('stamp').classList.add('on');
+    $('done-msg').hidden = false;
+    $('btn-sign').hidden = true;
+    confetti();
+  });
+
+  /* Confete simples */
+  function confetti(){
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const c = $('confetti'), ctx = c.getContext('2d');
+    c.width = innerWidth; c.height = innerHeight;
+    const colors = ['#FF5C8A','#FFC93C','#2EC4B6','#7B5CFF','#FF8A3D'];
+    const parts = Array.from({length:140}, ()=>({
+      x:Math.random()*c.width, y:-20-Math.random()*c.height*0.5,
+      w:6+Math.random()*7, h:8+Math.random()*10, vx:(Math.random()-.5)*3,
+      vy:2+Math.random()*4, rot:Math.random()*6, vr:(Math.random()-.5)*.3,
+      color:colors[Math.floor(Math.random()*colors.length)]
+    }));
+    let frames = 0;
+    (function tick(){
+      ctx.clearRect(0,0,c.width,c.height);
+      parts.forEach(p=>{
+        p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr;
+        ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+        ctx.fillStyle=p.color; ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore();
+      });
+      if(++frames < 220) requestAnimationFrame(tick); else ctx.clearRect(0,0,c.width,c.height);
+    })();
+  }
+})();
+</script>
